@@ -1,0 +1,7 @@
+# The following are not categorized as MTBF test cases
+# They should be run manually as soon as all MTBF test cases finish running
+[tests]
+testcases.clr-stability.sysstress.SysStress.test_sysstress = 1
+testcases.clr-stability.crashme.Crashme.test_crashme = 1
+testcases.clr-stability.systester.SysTester.test_systester = 1
+testcases.clr-stability.fuzzSyscalls.FuzzSyscall.test_trinity = 1

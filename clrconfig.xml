@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config desc="clr stability">
+	<general desc="general settings for all testcases">
+		<topdir></topdir>
+		<proxy></proxy>
+		<testrunner>noserunner</testrunner>
+	</general>
+
+	<testsuite desc="clr stability testsuite">
+		<testcase name="kernelbuild" runlog="No" localsrc="No" binary2build="No">
+			<description>"Repeat to compile linux kernel"</description>
+			<resourcePath>https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.16.1.tar.xz</resourcePath>
+			<steps>
+				a. prepare linux kernel source package 
+				b. make mproper 
+				c. make defconfig 
+				d. make -j core_nums bzImage
+				e. repeat step a~d 10 times
+			</steps>
+			<cmd>None</cmd>
+			<expected>succeed in compiling kernel each time and no system errors. </expected>
+		</testcase>
+
+		<testcase name="vmloop" runlog="No" localsrc="No" vms="20" memory="512" binary2build="Yes">
+			<description>"try to start [vms] virtual machines at the same time"</description>
+			<resourcePath>http://download.clearlinux.org/snapshots/1.0M1/CLR-20141119/images/clr-generic.x86_64-2014.11.19.raw.xz</resourcePath>
+			<steps>
+				a. prepare a raw data image of CLR
+				b. produce kernel and rootfs based on step a for each VM
+				c. start VMs with specific kernel and rootfs via qemu-systm-x86_64
+				d. ckeck each vm running status through its boot time report
+				e. repeat steps a~d 20 times
+			</steps>
+			<cmd>loop-start-vm.sh</cmd>
+			<expected>all VMs are booted and inform how long it spends to start</expected>
+		</testcase>
+
+		<testcase name="iozone" runlog="No" localsrc="No" binary2build="Yes">
+			<description>"Run iozone covering all file operations for record sizes of 4k to 16M for file sizes of 64k to 512M."</description>
+			<resourcePath>http://www.iozone.org/src/current/iozone3_429.tar</resourcePath>
+			<steps> 
+				a. prepare iozone source code
+				b. build utility iozone by "make linux-AMD64"
+				c. run iozone covering all file operations for record sizes of 4k to 16M for file sizes of 64k to 512M
+				d. repeat step a~c 5 times
+			</steps>
+			<cmd>None</cmd>
+			<expected>success to run the iozone</expected>
+		</testcase>
+
+		<testcase name="dd_parallel" runlog="No" localsrc="No" binary2build="No" datasize="1024" raw_device="/dev/sdb1">
+			<description> r/w raw device data and file (at least greater than 1G)</description>
+			<steps>
+				a. Raw write: write 1G raw data from /dev/zero to raw device
+				b. Raw read: read 1G raw data from raw device to /dev/null
+				c. File write: write 1G data from /dev/zero to a file
+				d. File read: read 1G date from a file to /dev/null
+			</steps>
+			<cmd>None</cmd>
+			<expected>all dd files are successful</expected>
+		</testcase>
+
+		<testcase name="xz_single_huge" runlog="No" localsrc="No" binary2build="No">
+			<description>compress a huge file via xz</description>
+			<steps>
+				a. prepare a huge file of which size is greater than 4G 
+				b. compress the file using xz
+				c. repeat steps a~b 5 times
+			</steps>
+			<cmd>None</cmd>
+			<expected>succeed to compress each time</expected>
+		</testcase>
+
+		<testcase name="xz_multi_small" runlog="No" localsrc="No" binary2build="No">
+			<description>compress a great many of small files with xz</description>
+			<resourcePath>https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.16.1.tar.xz</resourcePath>
+			<steps>
+				a. prepare linux kernel source package 
+				b. compress all files underneath kernel source tree using xz
+				c. repeat steps a~b 5 times
+			</steps>
+			<cmd>None</cmd>
+			<expected>succeed to compress each file under kernel source tree</expected>
+		</testcase>
+
+		<testcase name="sysstress" runlog="No" localsrc="Yes" binary2build="Yes">
+			<description>stress given subsystems under a specified load</description>
+			<steps>
+				a. prepare source package and compile the utility stress 
+				b. stress subsystems(cpu memory I/O etc) with specified workload
+			</steps>
+			<cmd>None</cmd>
+			<expected>No fatal system exceptions emerge</expected>
+		</testcase>
+
+		<testcase name="systester" runlog="No" localsrc="Yes" binary2build="Yes">
+			<description>test system stability and performance by calculating millions of digits of Pi </description>
+			<steps>
+				a. prepare systester source package and make it
+				b. start systester-cli like "systester-cli gausslg [size] -thread [thread_num]"
+			</steps>
+			<cmd>None</cmd>
+			<expected>No system error occur</expected>
+		</testcase>
+
+		<testcase name="netperf" runlog="No" localsrc="No" binary2build="Yes" net_server="10.239.52.161" duration="60" user="root" passcode="root">
+			<description>Stress network performance test via netperf</description>
+			<resourcePath>ftp://ftp.netperf.org/netperf/netperf-2.6.0.tar.gz</resourcePath>
+			<steps>
+				a. prepare netperf source and build
+				b. start netserver in net_server with port 5000
+				c. run netperf in client DUT connecting to net_server
+				d. repeat steps a~c 20 times
+			</steps>
+			<cmd>None</cmd>
+			<expected>No network exception occur</expected>
+		</testcase>
+
+		<testcase name="sshstress" runlog="No" localsrc="No" binary2build="No" sshserver="10.239.52.161" user="root" password="root">
+			<description>"Stress test for SSH."</description>
+			<steps>
+				a. ssh to other service 
+				b. repeat step a 50 times
+			</steps>
+			<cmd>None</cmd>
+			<expected>ssh to other service successful</expected>
+		</testcase>
+
+		<testcase name="httpstress" runlog="No" localsrc="No" binary2build="No" httpserver="http://download.clearlinux.org/snapshots/1.0M1/latest/images/">
+			<description>Stress http donwload</description>
+			<steps>
+				a. download a specific file from httpserver 
+				b. repeat step a 10 times
+			</steps>
+			<cmd>None</cmd>
+			<expected>Succeed to download file</expected>
+		</testcase>
+
+		<testcase name="ftpstress" runlog="No" localsrc="No" binary2build="No" ftpserver="ftp://clr-test.sh.intel.com:2021" size="1024" user="root" passcode="root">
+			<description>Stress test for FTP</description>
+			<steps>
+				a. wget the web image
+				b. upload the file to ftp service
+				c. ssh the service and delete the upload file
+				d. repeat steps a~c 10 times
+			</steps>
+			<cmd>None</cmd>
+			<expected>Stress test for FTP successful</expected>
+		</testcase>
+
+		<testcase name="crashme" runlog="No" localsrc="Yes" binary2build="Yes">
+			<description>run crashme to inspect the robustness of system operating environment</description>
+			<steps>
+				a. prepare source package of crashme
+				b. build crashme
+				c. run crashme at least 1 hour
+			</steps>
+			<cmd>None</cmd>
+			<expected>No fatal system exception</expected>
+		</testcase>
+
+		<testcase name="exercise_container" runlog="No" localsrc="No" binary2build="No" repo="http://linux-ftp.sh.intel.com/pub/mirrors/clearlinux/snapshots/1.0M1/CLR-20141119/standard/">
+			<description>"Bring up and down containers iteratively."</description>
+			<steps>
+				a. prepare resources to start a container
+				b. start a container
+				c. repeat step a~b 50 times
+			</steps>
+			<cmd>None</cmd>
+			<expected>container is started and ended smoothly each time</expected>
+		</testcase>
+
+		<testcase name="exercise_sys_service" runlog="No" localsrc="No" binary2build="No">
+			<description>exercise system services</description>
+			<steps>
+				a. retrieve current running system services
+				b. try actions like (stop,enable,reload,disable,enable,kill,restart) on the services
+				c. repeat steps a~b 50 times
+			</steps>
+			<cmd>None</cmd>
+			<expected>all actions on servers are successful</expected>
+		</testcase>
+
+		<testcase name="fuzz_syscalls" runlog="No" localsrc="Yes" binary2build="Yes">
+			<description>Fuzz current system calls</description>
+			<steps>
+				a. prepare source of trinity and build
+				b. run trinity to sequentially test all system calls
+			</steps>
+			<cmd>None</cmd>
+			<expected>No system errors occur</expected>
+		</testcase>
+
+	</testsuite>
+</config>
+

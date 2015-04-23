@@ -1,0 +1,55 @@
+# !/usr/bin/expect
+#
+# Copyright (C) 2014 Intel Corporation
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# Author: ethan.gao@intel.com
+# Date: Sept 7, 2014
+# Description: prepare netserver in remote server for netperf
+#
+
+set server [lindex $argv 0]
+set user [lindex $argv 1]
+set password [lindex $argv 2]
+set srcPkg [lindex $argv 3]
+set run_script [lindex $argv 4]
+
+set timeout 60
+
+spawn scp $run_script $srcPkg $user@$server:/tmp
+expect {
+	"*(yes/no)*" { send "yes\r"; exp_continue }
+	"*password*" { send "$password\r" }
+}
+
+wait
+
+spawn ssh $user@$server
+expect {
+	"*(yes/no)*" { send "yes\r"; exp_continue }
+	"*password*" { send "$password\r" }
+}
+
+expect "#" {
+	send "cp -v /tmp/$run_script / \r"
+}
+
+expect "#" {
+	send "chmod 755 /$run_script \r"
+}
+
+expect "#" {
+	send "sh -c '/$run_script'\r"
+}
+
+expect "#" {
+	send "ps -efH | grep netserver\r"
+}
+
+interact
+
+

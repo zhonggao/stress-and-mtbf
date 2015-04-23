@@ -1,0 +1,33 @@
+# This simply helps write test cases
+
+[Common Dependency]: "Development Tools"
+
+nmon_x86_64_clr:
+	[Dependency]: ncurses, ncurses-dev
+	[Build]: make nmon_x86_64_clr
+	[Install]: make install --eval="DESTDIR=<binDir()>"
+	[Usage]: nmon_x86_64_clr -f -s 360 -c 1680
+
+crashme:
+	[Dependency]: None
+	[Build]: make all
+	[Install]: make install
+	[Usage]: crashme +2000 666 100 1:00:00
+
+systester:
+	[Dependency]: None
+	[Build]: make all
+	[Install]: make install
+	[Usage]: systester-cli -gausslg -128M -threads 64 -turns 5 -test -log
+
+stress:
+	[Dependency]: None 
+	[Build]: ./configure --prefix=<case-bin-dir> && make all
+	[Install]: make install
+	[Usage]: "stress --help" for details
+
+trinity:
+	[Dependency]: None
+	[Build]: make all
+	[Install]: make install
+	[Usage]: scripts/test-all-syscalls-sequentially.sh

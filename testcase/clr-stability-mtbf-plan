@@ -1,0 +1,17 @@
+# Add test cases and the corresponding repeats herein
+# The following targets MTBF calculation
+[tests]
+testcases.clr-stability.kernelbuild.KernelBuild.test_kernel_build = 10
+testcases.clr-stability.vmloop.VMloop.test_vm_loop_start = 20
+testcases.clr-stability.dd_parallel.DDParallel.test_file_write = 10
+testcases.clr-stability.dd_parallel.DDParallel.test_file_read = 10
+testcases.clr-stability.exercise_container.ContainerExercise.test_exercise_container = 50
+testcases.clr-stability.exercise_sys_service.SysServiceExercise.test_exercise_sys_services = 50
+testcases.clr-stability.ftpstress.FTPStress.test_ftp_download = 10
+testcases.clr-stability.ftpstress.FTPStress.test_ftp_upload = 10
+testcases.clr-stability.httpstress.HTTPStress.test_httpstress = 10
+testcases.clr-stability.iozone.IOZone.test_iozone = 5
+testcases.clr-stability.netperf.NetPerf.test_netperf = 20
+testcases.clr-stability.sshstress.SSHStress.test_sshstress = 50
+testcases.clr-stability.xz_multi_small.XZMultiSmall.test_xz_multi_files = 5
+testcases.clr-stability.xz_single_huge.XZSingleHuge.test_xz_single_huge = 5
